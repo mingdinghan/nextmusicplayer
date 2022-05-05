@@ -30,7 +30,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       time: Date.now(),
     },
     'hello',
-    { expiresIn: '8h' }
+    {
+      expiresIn: '8h'
+    }
   )
 
   res.setHeader(
