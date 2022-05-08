@@ -1,6 +1,7 @@
 import GradientLayout from '../components/gradientLayout'
+import prisma from '../lib/prisma'
 
-const Home = () => {
+const Home = ({ artists }) => {
   return (
     <GradientLayout
       roundImage
@@ -13,6 +14,14 @@ const Home = () => {
       <div>home page</div>
     </GradientLayout>
   )
+}
+
+export const getServerSideProps = async () => {
+  const artists = await prisma.artist.findMany({})
+
+  return {
+    props: { artists },
+  }
 }
 
 export default Home
