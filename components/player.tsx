@@ -29,6 +29,7 @@ const Player = ({ songs, activeSong }) => {
   const [repeat, setRepeat] = useState(false)
   const [shuffle, setShuffle] = useState(false)
   const [duration, setDuration] = useState(0.0)
+  const soundRef = useRef(null)
 
   const setPlayState = (value) => {
     setPlaying(value)
@@ -42,12 +43,33 @@ const Player = ({ songs, activeSong }) => {
     setRepeat((state) => !state)
   }
 
+  const prevSong = () => {
+    setIndex((state) => {
+      return state ? state - 1 : songs.length - 1
+    })
+  }
+
+  const nextSong = () => {
+    setIndex((state) => {
+      if (shuffle) {
+        const next = Math.floor(Math.random() * songs.length)
+        if (next === state) {
+          return nextSong()
+        }
+        return next
+      }
+
+      return state === songs.length - 1 ? 0 : state + 1
+    })
+  }
+
   return (
     <Box>
       <Box>
         <ReactHowler
           playing={playing}
           src={activeSong?.url}
+          ref={soundRef}
         />
       </Box>
       <Center color="gray.600">
@@ -66,6 +88,7 @@ const Player = ({ songs, activeSong }) => {
             variant="link"
             aria-label="skip"
             fontSize="24px"
+            onClick={prevSong}
             icon={<MdSkipPrevious />}
           />
           {playing ? (
@@ -94,6 +117,7 @@ const Player = ({ songs, activeSong }) => {
             variant="link"
             aria-label="next"
             fontSize="24px"
+            onClick={nextSong}
             icon={<MdSkipNext />}
           />
           <IconButton
